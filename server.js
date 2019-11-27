@@ -19,33 +19,25 @@ app.get('/news', (req, res, next) => {
   }
 });
 
-app.get('/news/:id', (req, res, next) => {
-  if (req.url === '/news/:id') {
-    let getNews = news.find(newss => {
-      return newss.id === req.params.id;
-    });
-    res.send(getNews);
-  } else {
-    next(new Error('not valid url'));
-  }
+app.get('/news/:id', (req, res) => {
+  let getNews = news.find(newss => {
+    return newss.id === req.params.id;
+  });
+  res.send(getNews);
 })
 ;
 
 app.put('/news/:id', (req, res) => {
-  if (req.url === '/news/:id') {
-    let putNews = news.find(putNewsId => {
-      return putNewsId.id === req.params.id;
-    });
-    putNews.author = req.body.author;
-    putNews.title = req.body.title;
-    res.sendStatus(200);
-    console.log('done put');
-  } else {
-    next(new Error('not valid url'));
-  }
+  let putNews = news.find(putNewsId => {
+    return putNewsId.id === req.params.id;
+  });
+  putNews.author = req.body.author;
+  putNews.title = req.body.title;
+  res.sendStatus(200);
+  console.log('done put');
 });
 
-app.post('/news/add', (req, res) => {
+app.post('/news/add', (req, res, next) => {
   if (req.url === '/news/add') {
     let addNews = {
       id: req.body.id,
@@ -53,7 +45,6 @@ app.post('/news/add', (req, res) => {
       source: req.body.source,
       title: req.body.title,
       content: req.body.content,
-      dateOfFirstLogin: firstLoginDate,
       publishedAt: req.body.publishedAt
     };
     news.push(addNews);
@@ -65,14 +56,11 @@ app.post('/news/add', (req, res) => {
 });
 
 app.delete('/news/:id', (req, res) => {
-  if (req.url === '/news/:id') {
+  news = news.filter(deleteNews => {
     return deleteNews.id !== req.params.id;
-    res.sendStatus(200);
-    console.log('done delete');
-  } else {
-    next(new Error('not valid url'));
-  }
-
+  });
+  res.sendStatus(200);
+  console.log('done delete');
 });
 
 app.get('/', (req, res) => {
